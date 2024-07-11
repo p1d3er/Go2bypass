@@ -1,0 +1,8 @@
+github.com/Binject/debug v0.0.0-20211007083345-9605c99179ee h1:neBp9wDYVY4Uu1gGlrL+IL4JeZslz+hGEAjBXGAPWak=
+github.com/Binject/debug v0.0.0-20211007083345-9605c99179ee/go.mod h1:QzgxDLY/qdKlvnbnb65eqTedhvQPbaSP2NqIbcuKvsQ=
+github.com/awgh/rawreader v0.0.0-20200626064944-56820a9c6da4 h1:cIAK2NNf2yafdgpFRNJrgZMwvy61BEVpGoHc2n4/yWs=
+github.com/awgh/rawreader v0.0.0-20200626064944-56820a9c6da4/go.mod h1:SalMPBCab3yuID8nIhLfzwoBV+lBRyaC7NhuN8qL8xE=
+github.com/timwhitez/Doge-Gabh v1.9.2 h1:DcBzoTlcIbwtSg8Q6ubEU57qBo0fSGEamGx7hxAVwow=
+github.com/timwhitez/Doge-Gabh v1.9.2/go.mod h1:17QoN89jMf75zSSsk65bjx4+tmkR2NfWAyV3YT9Fhfc=
+golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 h1:0A+M6Uqn+Eje4kHMK80dtF3JCXC4ykBgQG4Fe06QRhQ=
+golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=

