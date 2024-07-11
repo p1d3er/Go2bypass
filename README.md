@@ -58,8 +58,7 @@ Flags:
   -o, --output string    Output FileName
 ```
 
-
-
+在此感谢timwhitez的https://github.com/timwhitez/Doge-Gabh项目
 ```
 go run .\Go2bypass.go build -e AesCBC -f payload.bin -m HaloGate
 ```
