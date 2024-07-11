@@ -145,7 +145,7 @@ func (this BuildFile) GoBuildAndRemoveFileToExec() {
 }
 
 func (this BuildFile) RemoveAllOutput() {
-	//os.RemoveAll("./output/")
+	os.RemoveAll("./output/")
 }
 
 //go build
